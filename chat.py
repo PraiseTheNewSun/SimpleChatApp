@@ -1,33 +1,80 @@
 import sys
 import requests
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget, QPushButton, QLineEdit, QTextEdit #type: ignore
-from PyQt5.QtCore import QRect #type:ignore
+from PyQt5.QtCore import QRect, QSize #type:ignore
+from PyQt5.QtGui import QPixmap #type:ignore
 
 class ChatApp(QMainWindow):
     style = '''
                 #room_name{
                     background-color: #ffffff;
                     height: 35px;
-                    width: 290px;
+                    margin: 0 80px;
+                    transform: translateY(-100px);
+                    border-radius: 10px;
+                    padding: 0 10px;
+                }
+                #room_pass{
+                    background-color: #ffffff;
+                    height: 35px;
+                    margin: 0 80px;
+                    border-radius: 10px;
+                    padding: 0 10px;
+                }
+                #room_label{
+                    margin: 0px 48px;
+                    padding: 0px 60px;
+                    color: #333333;
+                    font-size: 27px;
                 }
                 #create_room{
-                    height: 30px;
-                    width: 100px
+                    height: 35px;
+                    margin: 0 80px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #1995ad;
+                    color: #333;
+                }
+                #create_room:hover{
+                    background-color: #1989ad;
+                    color: #fff;
                 }
                 #create_room_layout{
-                    padding: 50px;
+                    background-color: #a1d6e2;
+                    margin: 50px;
+                    padding: 0 30px;
+                    border: none;
+                    border-radius: 10px;
                 }
                 #window{
-                    padding: 50px;
                     border-radius: 25px;
-                    background-color: #a1d6e2;
+                    background-color: #1995ad;
+                }
+                #send{
+                    height: 30px;
+                    width: 100px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: white;
+                    color: #333333;
+                }
+                #send:hover{
+                    background-color: #333;
+                    color: #fff;
+                }
+                #messagebody{
+                    height: 30px;
+                    width: 290px;
+                    border: none;
+                    border-radius: 5px;
+                    padding: 0px 5px;
                 }
             '''
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Chatteau')
-        self.setGeometry(100, 100, 500, 400)
+        self.setGeometry(100, 100, 500, 700)
         self.setObjectName('window')
 
         self.InitializeUI()
@@ -36,7 +83,8 @@ class ChatApp(QMainWindow):
         ###### AREA FOR MESSAGE DISPLAY
         self.messageDisplay = QTextEdit(self)
         self.messageDisplay.setFocusPolicy(False)
-        self.messageDisplay.setStyleSheet('border-radius: 5px; color: red; width: 100%;')
+        self.messageDisplay.scroll(100, 200)
+        self.messageDisplay.setStyleSheet('border-radius: 10px; padding: 5px; color: #333333; width: 2px; border: none; background-color: #a1d6e2; height: 200px; display: none')
 
         ##### AREA TO TYPE MESSAGE
         self.messageBody = QLineEdit(self)
@@ -51,17 +99,20 @@ class ChatApp(QMainWindow):
         self.send.setObjectName('send')
 
         self.room_label = QLabel(self)
-        self.room_label.setText('Python programming')
-        self.room_label.resize(300, 35)
+        self.room_label.setText('Create Room Details')
+        self.room_label.setObjectName('room_label')
 
         self.room_name = QLineEdit(self)
         self.room_name.setObjectName('room_name')
+        self.room_name.setPlaceholderText('Room name')
 
         self.room_pass = QLineEdit(self)
         self.room_pass.setObjectName('room_pass')
+        self.room_pass.setEchoMode(QLineEdit.Password)
+        self.room_pass.setPlaceholderText('Room passcode')
 
         self.create_room = QPushButton(self)
-        self.create_room.setText('Create room')
+        self.create_room.setText('Create')
         self.create_room.resize(200, 30)
         self.create_room.setObjectName('create_room')
 
@@ -75,12 +126,20 @@ class ChatApp(QMainWindow):
         self.layout.addWidget(self.messageDisplay)
         self.layout.addLayout(self.mini_layout)
 
+        self.image = QPixmap('img.jpg')
+        self.image_label = QLabel(self)
+        self.image_label.setPixmap(self.image)
+
         self.create_room_layout = QVBoxLayout(self)
         self.create_room_layout.setObjectName('create_room_layout')
+        self.create_room_layout.addSpacing(100)
         self.create_room_layout.addWidget(self.room_label)
+        self.create_room_layout.addSpacing(50)
         self.create_room_layout.addWidget(self.room_name)
         self.create_room_layout.addWidget(self.room_pass)
         self.create_room_layout.addWidget(self.create_room)
+        self.create_room_layout.addWidget(self.image_label)
+        self.create_room_layout.addSpacing(200)
 
         self.room_auth = QWidget(self)
         self.room_auth.setLayout(self.create_room_layout)
@@ -94,7 +153,7 @@ class ChatApp(QMainWindow):
         self.display.setObjectName('display')
         self.display.addWidget(self.room_auth)
         self.display.addWidget(self.chat_room)
-        self.display.setCurrentWidget(self.chat_room)
+        self.display.setCurrentWidget(self.room_auth)
         self.display.setGeometry(0,0, 500, 400)
         self.display.show()
 
