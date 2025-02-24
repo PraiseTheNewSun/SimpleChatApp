@@ -47,7 +47,6 @@ class ChatApp(QMainWindow):
                     border-radius: 10px;
                 }
                 #window{
-                    border-radius: 25px;
                     background-color: #1995ad;
                 }
                 #send{
@@ -69,12 +68,20 @@ class ChatApp(QMainWindow):
                     border-radius: 5px;
                     padding: 0px 5px;
                 }
+                #image{
+                    height: 300px;
+                    width: 300px;
+                    border-radius: 50px;
+                    margin: 0px 50px;
+                    border-image: url("img.jpg");
+                    background-size: cover;
+                }
             '''
 
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Chatteau')
-        self.setGeometry(100, 100, 500, 700)
+        self.setGeometry(100, 100, 1000, 400)
         self.setObjectName('window')
 
         self.InitializeUI()
@@ -126,23 +133,26 @@ class ChatApp(QMainWindow):
         self.layout.addWidget(self.messageDisplay)
         self.layout.addLayout(self.mini_layout)
 
-        self.image = QPixmap('img.jpg')
-        self.image_label = QLabel(self)
-        self.image_label.setPixmap(self.image)
+        self.image = QPushButton(self)
+        self.image.setObjectName('image')
+        self.image.setGeometry(QRect(0, 0, 300, 300))
 
         self.create_room_layout = QVBoxLayout(self)
-        self.create_room_layout.setObjectName('create_room_layout')
         self.create_room_layout.addSpacing(100)
         self.create_room_layout.addWidget(self.room_label)
         self.create_room_layout.addSpacing(50)
         self.create_room_layout.addWidget(self.room_name)
         self.create_room_layout.addWidget(self.room_pass)
         self.create_room_layout.addWidget(self.create_room)
-        self.create_room_layout.addWidget(self.image_label)
         self.create_room_layout.addSpacing(200)
 
+        self.room_create_layout = QHBoxLayout(self)
+        self.room_create_layout.setGeometry(QRect(50, 50, 900, 300))
+        self.room_create_layout.addLayout(self.create_room_layout)
+        self.room_create_layout.addWidget(self.image)
+
         self.room_auth = QWidget(self)
-        self.room_auth.setLayout(self.create_room_layout)
+        self.room_auth.setLayout(self.room_create_layout)
         self.room_auth.setObjectName('create_room_layout')
 
         self.chat_room = QWidget(self)
@@ -154,7 +164,7 @@ class ChatApp(QMainWindow):
         self.display.addWidget(self.room_auth)
         self.display.addWidget(self.chat_room)
         self.display.setCurrentWidget(self.room_auth)
-        self.display.setGeometry(0,0, 500, 400)
+        self.display.setGeometry(0,0, 1000, 400)
         self.display.show()
 
         self.gettingMessages()
