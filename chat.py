@@ -67,12 +67,13 @@ class ChatApp(QMainWindow):
                     border: none;
                     border-radius: 5px;
                     padding: 0px 5px;
+                    margin-left: 500px;
                 }
                 #image{
                     height: 300px;
                     width: 300px;
-                    border-radius: 50px;
-                    margin: 0px 50px;
+                    border-radius: 10px;
+                    margin: 90px 90px;
                     border-image: url("img.jpg");
                     background-size: cover;
                 }
@@ -81,7 +82,8 @@ class ChatApp(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle('Chatteau')
-        self.setGeometry(100, 100, 1000, 400)
+        #self.setGeometry(100, 100, 1000, 400)
+        self.setMinimumSize(1000, 400)
         self.setObjectName('window')
 
         self.InitializeUI()
@@ -90,8 +92,7 @@ class ChatApp(QMainWindow):
         ###### AREA FOR MESSAGE DISPLAY
         self.messageDisplay = QTextEdit(self)
         self.messageDisplay.setFocusPolicy(False)
-        self.messageDisplay.scroll(100, 200)
-        self.messageDisplay.setStyleSheet('border-radius: 10px; padding: 5px; color: #333333; width: 2px; border: none; background-color: #a1d6e2; height: 200px; display: none')
+        self.messageDisplay.setStyleSheet('border-radius: 10px; padding: 5px; color: #333333; width: 2px; border: none; background-color: #a1d6e2; height: 200px; margin-left: 500px')
 
         ##### AREA TO TYPE MESSAGE
         self.messageBody = QLineEdit(self)
@@ -126,6 +127,7 @@ class ChatApp(QMainWindow):
         self.mini_layout = QHBoxLayout(self)
         self.mini_layout.setGeometry(QRect(0, 0, 500, 400))
         self.mini_layout.addWidget(self.messageBody)
+        self.mini_layout.setObjectName('mini_layout')
         self.mini_layout.addWidget(self.send)
 
         self.layout = QVBoxLayout(self)
@@ -163,7 +165,7 @@ class ChatApp(QMainWindow):
         self.display.setObjectName('display')
         self.display.addWidget(self.room_auth)
         self.display.addWidget(self.chat_room)
-        self.display.setCurrentWidget(self.room_auth)
+        self.display.setCurrentWidget(self.chat_room)
         self.display.setGeometry(0,0, 1000, 400)
         self.display.show()
 
