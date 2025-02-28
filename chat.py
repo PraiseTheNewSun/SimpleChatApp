@@ -1,6 +1,8 @@
 import sys
 import requests
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget, QPushButton, QLineEdit, QTextEdit #type: ignore
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, \
+    QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget,\
+    QPushButton, QGridLayout, QLineEdit, QTextEdit, QListWidget #type: ignore
 from PyQt5.QtCore import QRect, QSize #type:ignore
 from PyQt5.QtGui import QPixmap #type:ignore
 
@@ -63,11 +65,10 @@ class ChatApp(QMainWindow):
                 }
                 #messagebody{
                     height: 30px;
-                    width: 290px;
+                    width: 350px;
                     border: none;
                     border-radius: 5px;
                     padding: 0px 5px;
-                    margin-left: 500px;
                 }
                 #image{
                     height: 300px;
@@ -75,7 +76,21 @@ class ChatApp(QMainWindow):
                     border-radius: 10px;
                     margin: 90px 90px;
                     border-image: url("img.jpg");
-                    background-size: cover;
+                }
+                #users{
+                    width: 500px;
+                    margin-right: 500px;
+                }
+                #u_label{
+                    background-color: #fff;
+                    border: none;
+                    font-size: 20px;
+                    border-radius: 5px;
+                    padding-left: 5px;
+                    color: #333333;
+                }
+                #u_list{
+                   
                 }
             '''
 
@@ -92,7 +107,7 @@ class ChatApp(QMainWindow):
         ###### AREA FOR MESSAGE DISPLAY
         self.messageDisplay = QTextEdit(self)
         self.messageDisplay.setFocusPolicy(False)
-        self.messageDisplay.setStyleSheet('border-radius: 10px; padding: 5px; color: #333333; width: 2px; border: none; background-color: #a1d6e2; height: 200px; margin-left: 500px')
+        self.messageDisplay.setStyleSheet('border-radius: 10px; padding: 5px; color: #333333; width: 2px; border: none; background-color: #a1d6e2; height: 200px;')
 
         ##### AREA TO TYPE MESSAGE
         self.messageBody = QLineEdit(self)
@@ -105,6 +120,24 @@ class ChatApp(QMainWindow):
         self.send.setGeometry(350, 315, 100, 35)
         self.send.clicked.connect(self.sendMessage)
         self.send.setObjectName('send')
+        
+        self.users_label = QLabel(self)
+        self.users_label.setText('Members')
+        self.users_label.resize(30, 50)
+        self.users_label.setObjectName('u_label')
+
+        self.user_list = QListWidget(self)
+        self.user_list.addItem('hello')
+        self.user_list.setObjectName('u_list')
+        #self.user_list.resize(200, 200)
+
+        self.users = QVBoxLayout(self)
+        self.users.setGeometry(QRect(20, 50, 300, 100))
+        self.users.addWidget(self.users_label)
+        self.users.setSpacing(5)
+        self.users.addWidget(self.user_list)
+        self.users.addStretch()
+        self.users.setObjectName('users')
 
         self.room_label = QLabel(self)
         self.room_label.setText('Create Room Details')
@@ -133,7 +166,14 @@ class ChatApp(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.layout.setGeometry(QRect(0, 0, 500, 400))
         self.layout.addWidget(self.messageDisplay)
+        self.layout.setSpacing(10)
         self.layout.addLayout(self.mini_layout)
+
+        self.chat_layout = QHBoxLayout()
+        self.chat_layout.addLayout(self.users)
+        self.chat_layout.setSpacing(50)
+        self.chat_layout.addLayout(self.layout)
+        self.chat_layout.setObjectName('chat_layout')
 
         self.image = QPushButton(self)
         self.image.setObjectName('image')
@@ -158,7 +198,7 @@ class ChatApp(QMainWindow):
         self.room_auth.setObjectName('create_room_layout')
 
         self.chat_room = QWidget(self)
-        self.chat_room.setLayout(self.layout)
+        self.chat_room.setLayout(self.chat_layout)
         self.chat_room.setObjectName('chat_room')
 
         self.display = QStackedWidget(self)
