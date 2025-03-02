@@ -1,8 +1,6 @@
 import sys
 import requests
-from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, \
-    QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget,\
-    QPushButton, QGridLayout, QLineEdit, QTextEdit, QListWidget #type: ignore
+from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget, QPushButton, QLineEdit, QTextEdit, QListWidget #type: ignore
 from PyQt5.QtCore import QRect, QSize #type:ignore
 from PyQt5.QtGui import QPixmap #type:ignore
 
@@ -156,6 +154,7 @@ class ChatApp(QMainWindow):
         self.create_room.setText('Create')
         self.create_room.resize(200, 30)
         self.create_room.setObjectName('create_room')
+        self.create_room.clicked.connect(self.createRoom)
 
         self.mini_layout = QHBoxLayout(self)
         self.mini_layout.setGeometry(QRect(0, 0, 500, 400))
@@ -205,7 +204,7 @@ class ChatApp(QMainWindow):
         self.display.setObjectName('display')
         self.display.addWidget(self.room_auth)
         self.display.addWidget(self.chat_room)
-        self.display.setCurrentWidget(self.chat_room)
+        self.display.setCurrentWidget(self.room_auth)
         self.display.setGeometry(0,0, 1000, 400)
         self.display.show()
 
@@ -227,6 +226,12 @@ class ChatApp(QMainWindow):
         data = requests.get('http://127.0.0.1:8000/api/messages')
         for i in data.json()['data']:
             self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
+
+    def createRoom(self):
+        if self.room_name != '' and self.room_pass != '':
+            requests.post('http://127.0.0.1:8000/api/messages', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
+        self.room_name.clear()
+        self.room_pass.clear()
 
 app = QApplication(sys.argv)
 app.setStyleSheet(ChatApp.style)
