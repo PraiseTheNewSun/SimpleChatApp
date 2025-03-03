@@ -229,7 +229,7 @@ class ChatApp(QMainWindow):
 
     def createRoom(self):
         if self.room_name != '' and self.room_pass != '':
-            requests.post('http://127.0.0.1:8000/api/messages', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
+            requests.post('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
         self.room_name.clear()
         self.room_pass.clear()
 
