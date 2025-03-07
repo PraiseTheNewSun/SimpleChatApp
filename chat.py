@@ -22,7 +22,7 @@ class ChatApp(QMainWindow):
                     padding: 0 10px;
                 }
                 #room_label{
-                    margin: 0px 48px;
+                    margin: 0px 20px;
                     padding: 0px 60px;
                     color: #333333;
                     font-size: 27px;
@@ -93,6 +93,38 @@ class ChatApp(QMainWindow):
                     color: #333333;
                     font-size: 27px;
                 }
+                #r_title{
+                    color: #333333;
+                    font-size: 27px;
+                    font-style: italic;
+                    font-weight: 3;
+                }
+                #back{
+                    font-size: 50px;
+                    height: 50px;
+                    width: 50px;
+                    margin-left: 450px;
+                    border-radius: 25px;
+                    background-color: #a1d6e2;
+                    padding: 0 5px 5px 0;
+                    color: #333333;
+                }
+                #back:hover{
+                    background-color: #ffffff;
+                }
+                #or{
+                    margin: 0 230px;
+                }
+                #or_create{
+                    margin: 0 80px;
+                    background-color: transparent;
+                    text-decoration: underline;
+                    color: blue;
+                    border: none;
+                }
+                #or_create:hover{
+                    color: purple;
+                }
             '''
 
     def __init__(self):
@@ -115,33 +147,18 @@ class ChatApp(QMainWindow):
         self.messageBody.setGeometry(50, 315, 290, 35)
         self.messageBody.setObjectName('messagebody')
 
+        # THE FIELD HOLDING ROOM NAME
+        self.hideRoom = QLineEdit(self)
+        self.hideRoom.setGeometry(50, 315, 290, 35)
+        self.hideRoom.setObjectName('messagebody')
+        self.hideRoom.hide()
+
         ##### BUTTON TO SEND THE TYPED MESSAGE
         self.send = QPushButton(self)
         self.send.setText('Send')
         self.send.setGeometry(350, 315, 100, 35)
         self.send.clicked.connect(self.sendMessage)
         self.send.setObjectName('send')
-        
-        #THE TEXT HEADER FOR USER DISPLAY
-        self.users_label = QLabel(self)
-        self.users_label.setText('Members')
-        self.users_label.resize(30, 50)
-        self.users_label.setObjectName('u_label')
-
-        #THE WIDGET FOR LIST OF USERS TO BE DISPLAYED
-        self.user_list = QListWidget(self)
-        self.user_list.addItem('hello')
-        self.user_list.setObjectName('u_list')
-        #self.user_list.resize(200, 200)
-
-        # THE LAYOUT FOR THE TEXT HEADER FOR USERS AND THE LIST OF USERS DISPLAY
-        self.users = QVBoxLayout(self)
-        self.users.setGeometry(QRect(20, 50, 300, 100))
-        self.users.addWidget(self.users_label)
-        self.users.setSpacing(5)
-        self.users.addWidget(self.user_list)
-        self.users.addStretch()
-        self.users.setObjectName('users')
 
         # THE TEXT SHOWN ON THE CREATE ROOM PAGE
         self.room_label = QLabel(self)
@@ -152,6 +169,19 @@ class ChatApp(QMainWindow):
         self.auth_label = QLabel(self)
         self.auth_label.setText('Log In to Room')
         self.auth_label.setObjectName('auth_label')
+
+        self.roomTitle = QLabel(self)
+        #self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
+        self.roomTitle.setObjectName('r_title')
+
+        self.back = QPushButton(self)
+        self.back.setText('<')
+        self.back.setObjectName('back')
+        self.back.clicked.connect(self.returnToLogin)
+
+        self.head = QHBoxLayout(self)
+        self.head.addWidget(self.roomTitle)
+        self.head.addWidget(self.back)
 
         # THE AREA TO INPUT ROOM NAME
         self.room_name = QLineEdit(self)
@@ -189,6 +219,13 @@ class ChatApp(QMainWindow):
         self.login.setObjectName('create_room')
         self.login.clicked.connect(self.roomAuth)
 
+        self.Or = QLabel('Or') 
+        self.Or.setObjectName('or')
+
+        self.orCreate = QPushButton('create room here')
+        self.orCreate.setObjectName('or_create')
+        self.orCreate.clicked.connect(self.returnToCreate)
+
         # THE LAYOUT THAT ENCOMPASSES THE AREA TO INPUT MESSAGE AND THE SEND BUTTON
         self.mini_layout = QHBoxLayout(self)
         self.mini_layout.setGeometry(QRect(0, 0, 500, 400))
@@ -199,13 +236,13 @@ class ChatApp(QMainWindow):
         # THE LAYOUT FOR THE CHAT DISPLAY
         self.layout = QVBoxLayout(self)
         self.layout.setGeometry(QRect(0, 0, 500, 400))
+        self.layout.addLayout(self.head)
         self.layout.addWidget(self.messageDisplay)
         self.layout.setSpacing(10)
         self.layout.addLayout(self.mini_layout)
 
         # THE LAYOUT THAT HOUSES THE ENTIRE WIDGETS AND LAYOUT OF THE CHAT PAGE
         self.chat_layout = QHBoxLayout()
-        self.chat_layout.addLayout(self.users)
         self.chat_layout.setSpacing(50)
         self.chat_layout.addLayout(self.layout)
         self.chat_layout.setObjectName('chat_layout')
@@ -217,9 +254,9 @@ class ChatApp(QMainWindow):
 
         # THE LAYOUT THAT HOUSES THE INPUT FIELDS FOR ROOM DETAILS AND CREATE BUTTON
         self.create_room_layout = QVBoxLayout(self)
-        self.create_room_layout.addSpacing(100)
+        self.create_room_layout.addSpacing(250)
         self.create_room_layout.addWidget(self.room_label)
-        self.create_room_layout.addSpacing(50)
+        self.create_room_layout.addSpacing(30)
         self.create_room_layout.addWidget(self.room_name)
         self.create_room_layout.addWidget(self.room_pass)
         self.create_room_layout.addWidget(self.create_room)
@@ -239,6 +276,8 @@ class ChatApp(QMainWindow):
         self.room_auth_layout.addWidget(self.room_name_auth)
         self.room_auth_layout.addWidget(self.room_pass_auth)
         self.room_auth_layout.addWidget(self.login)
+        self.room_auth_layout.addWidget(self.Or)
+        self.room_auth_layout.addWidget(self.orCreate)
         self.room_auth_layout.addSpacing(200)
 
         # THE LAYOUT THAT HOUSES ALL WIDGETS AND LAYOUTS OF THE ROOM AUTHENTICATION PAGE
@@ -248,9 +287,9 @@ class ChatApp(QMainWindow):
         self.auth_layout.addWidget(self.image)
 
         # ROOM CREATION WIDGET
-        self.room_auth = QWidget(self)
-        self.room_auth.setLayout(self.room_create_layout)
-        self.room_auth.setObjectName('create_room_layout')
+        self.create = QWidget(self)
+        self.create.setLayout(self.room_create_layout)
+        self.create.setObjectName('create_room_layout')
 
         # CHAT ROOM WIDGET
         self.chat_room = QWidget(self)
@@ -265,7 +304,7 @@ class ChatApp(QMainWindow):
         # THE WIDGET THAT STORES ALL THE PAGE WIDGETS IN STACKS
         self.display = QStackedWidget(self)
         self.display.setObjectName('display')
-        self.display.addWidget(self.room_auth)
+        self.display.addWidget(self.create)
         self.display.addWidget(self.chat_room)
         self.display.addWidget(self.auth)
         self.display.setCurrentWidget(self.auth)
@@ -305,6 +344,13 @@ class ChatApp(QMainWindow):
             room = requests.get('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name_auth.text(), 'room_pass': self.room_pass_auth.text()})
             if room:
                 self.display.setCurrentWidget(self.chat_room)
+                self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
+
+    def returnToLogin(self):
+        self.display.setCurrentWidget(self.auth)
+
+    def returnToCreate(self):
+        self.display.setCurrentWidget(self.create)
 
 app = QApplication(sys.argv)
 app.setStyleSheet(ChatApp.style)
