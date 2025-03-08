@@ -75,10 +75,6 @@ class ChatApp(QMainWindow):
                     margin: 90px 90px;
                     border-image: url("img.jpg");
                 }
-                #users{
-                    width: 500px;
-                    margin-right: 500px;
-                }
                 #u_label{
                     background-color: #fff;
                     border: none;
