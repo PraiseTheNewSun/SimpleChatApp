@@ -75,10 +75,6 @@ class ChatApp(QMainWindow):
                     margin: 90px 90px;
                     border-image: url("img.jpg");
                 }
-                #users{
-                    width: 500px;
-                    margin-right: 500px;
-                }
                 #u_label{
                     background-color: #fff;
                     border: none;
@@ -88,7 +84,7 @@ class ChatApp(QMainWindow):
                     color: #333333;
                 }
                 #auth_label{
-                    margin: 0px 48px;
+                    margin: 0px 20px;
                     padding: 0px 60px;
                     color: #333333;
                     font-size: 27px;
@@ -100,11 +96,11 @@ class ChatApp(QMainWindow):
                     font-weight: 3;
                 }
                 #back{
-                    font-size: 50px;
-                    height: 50px;
-                    width: 50px;
+                    font-size: 30px;
+                    height: 30px;
+                    width: 30px;
                     margin-left: 450px;
-                    border-radius: 25px;
+                    border-radius: 15px;
                     background-color: #a1d6e2;
                     padding: 0 5px 5px 0;
                     color: #333333;
@@ -113,17 +109,22 @@ class ChatApp(QMainWindow):
                     background-color: #ffffff;
                 }
                 #or{
-                    margin: 0 230px;
+                    margin: 0 80px;
                 }
                 #or_create{
-                    margin: 0 80px;
+                    margin: 0 300px 0 80px;
                     background-color: transparent;
                     text-decoration: underline;
                     color: blue;
                     border: none;
+                    text-align: left;
                 }
                 #or_create:hover{
                     color: purple;
+                }
+                #already{
+                    margin-left: 80px;
+                    color: #333333;
                 }
             '''
 
@@ -162,7 +163,7 @@ class ChatApp(QMainWindow):
 
         # THE TEXT SHOWN ON THE CREATE ROOM PAGE
         self.room_label = QLabel(self)
-        self.room_label.setText('Create Room Details')
+        self.room_label.setText('Create Room')
         self.room_label.setObjectName('room_label')
 
         # THE TEXT SHOWN ON THE ROOM AUTHENTICATION OR LOGIN PAGE
@@ -219,12 +220,19 @@ class ChatApp(QMainWindow):
         self.login.setObjectName('create_room')
         self.login.clicked.connect(self.roomAuth)
 
-        self.Or = QLabel('Or') 
+        self.Or = QLabel('Dont have a room yet ?') 
         self.Or.setObjectName('or')
 
         self.orCreate = QPushButton('create room here')
         self.orCreate.setObjectName('or_create')
         self.orCreate.clicked.connect(self.returnToCreate)
+
+        self.already = QLabel('Already have a room ?') 
+        self.already.setObjectName('already')
+
+        self.orLogin = QPushButton('Log In')
+        self.orLogin.setObjectName('or_create')
+        self.orLogin.clicked.connect(self.returnToLogin)
 
         # THE LAYOUT THAT ENCOMPASSES THE AREA TO INPUT MESSAGE AND THE SEND BUTTON
         self.mini_layout = QHBoxLayout(self)
@@ -252,6 +260,10 @@ class ChatApp(QMainWindow):
         self.image.setObjectName('image')
         self.image.setGeometry(QRect(0, 0, 300, 300))
 
+        self.image1 = QPushButton(self)
+        self.image1.setObjectName('image')
+        self.image1.setGeometry(QRect(0, 0, 300, 300))
+
         # THE LAYOUT THAT HOUSES THE INPUT FIELDS FOR ROOM DETAILS AND CREATE BUTTON
         self.create_room_layout = QVBoxLayout(self)
         self.create_room_layout.addSpacing(250)
@@ -260,19 +272,21 @@ class ChatApp(QMainWindow):
         self.create_room_layout.addWidget(self.room_name)
         self.create_room_layout.addWidget(self.room_pass)
         self.create_room_layout.addWidget(self.create_room)
+        self.create_room_layout.addWidget(self.already)
+        self.create_room_layout.addWidget(self.orLogin)
         self.create_room_layout.addSpacing(200)
 
         # THE LAYOUT THAT HOUSES ALL WIDGETS AND LAYOUTS OF THE ROOM CREATION PAGE
         self.room_create_layout = QHBoxLayout(self)
         self.room_create_layout.setGeometry(QRect(50, 50, 900, 300))
         self.room_create_layout.addLayout(self.create_room_layout)
-        self.room_create_layout.addWidget(self.image)
+        self.room_create_layout.addWidget(self.image1)
 
         # THE LAYOUT THAT HOUSES THE INPUT FIELDS FOR ROOM AUTHENTICATION
         self.room_auth_layout = QVBoxLayout(self)
-        self.room_auth_layout.addSpacing(100)
+        self.room_auth_layout.addSpacing(250)
         self.room_auth_layout.addWidget(self.auth_label)
-        self.room_auth_layout.addSpacing(50)
+        self.room_auth_layout.addSpacing(30)
         self.room_auth_layout.addWidget(self.room_name_auth)
         self.room_auth_layout.addWidget(self.room_pass_auth)
         self.room_auth_layout.addWidget(self.login)
@@ -343,6 +357,8 @@ class ChatApp(QMainWindow):
         if self.room_name_auth != '' and self.room_pass_auth != '':
             room = requests.get('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name_auth.text(), 'room_pass': self.room_pass_auth.text()})
             if room:
+                self.room_name_auth.clear()
+                self.room_pass_auth.clear()
                 self.display.setCurrentWidget(self.chat_room)
                 self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
 
