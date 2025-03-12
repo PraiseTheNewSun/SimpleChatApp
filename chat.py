@@ -148,11 +148,10 @@ class ChatApp(QMainWindow):
         self.messageBody.setGeometry(50, 315, 290, 35)
         self.messageBody.setObjectName('messagebody')
 
-        # THE FIELD HOLDING ROOM NAME
+        # THE FIELD HOLDING ROOM NAME IN CHAT (HIDDEN)
         self.hideRoom = QLineEdit(self)
-        self.hideRoom.setGeometry(50, 315, 290, 35)
-        self.hideRoom.setObjectName('messagebody')
-        self.hideRoom.hide()
+        #self.hideRoom.setText('Lelolelo')
+        #self.hideRoom.hide()
 
         ##### BUTTON TO SEND THE TYPED MESSAGE
         self.send = QPushButton(self)
@@ -172,7 +171,6 @@ class ChatApp(QMainWindow):
         self.auth_label.setObjectName('auth_label')
 
         self.roomTitle = QLabel(self)
-        #self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
         self.roomTitle.setObjectName('r_title')
 
         self.back = QPushButton(self)
@@ -245,6 +243,7 @@ class ChatApp(QMainWindow):
         self.layout = QVBoxLayout(self)
         self.layout.setGeometry(QRect(0, 0, 500, 400))
         self.layout.addLayout(self.head)
+        self.layout.addWidget(self.hideRoom)
         self.layout.addWidget(self.messageDisplay)
         self.layout.setSpacing(10)
         self.layout.addLayout(self.mini_layout)
@@ -325,42 +324,60 @@ class ChatApp(QMainWindow):
         self.display.setGeometry(0,0, 1000, 400)
         self.display.show()
 
-        self.gettingMessages()
+        #self.gettingMessages()
 
     # THE FUNCTION THAT SENDS MESSAGE TO API
     def sendMessage(self):
         ##### SENDING MESSAGE TO API AND RE-APPENDING UPDATED DATA
-        if self.messageBody.text() != '':
-            requests.post('http://127.0.0.1:8000/api/messages', data={'author': 'Praise', 'body': self.messageBody.text()})
-            data = requests.get('http://127.0.0.1:8000/api/messages')
-            i = data.json()['data'][-1]
-            self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
-        else:
-            pass
-        
-        self.messageBody.clear()
+        try:
+            if self.messageBody.text() != '':
+                #requests.post('http://127.0.0.1:8000/api/messages', data={'author': 'Praise', 'body': self.messageBody.text(), 'room': self.hideRoom.text()})
+                #data = requests.get('http://127.0.0.1:8000/api/messages')
+                # for i in data.json()['data']:
+                #     if i['room'] == self.hideRoom.text():
+                #         j = i[-1]
+                #         print(j)
+                #self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
+                print(self.roomTitle.text())
+            else:
+                print(self.roomTitle.text().split(' ')[1])
+            self.messageBody.clear()
+        except:
+            print('API Not Accessible')
+        print(f'{self.hideRoom.text()}')
 
     # THE FUNCTION THAT GETS STORED MESSAGES FROM THE API
     def gettingMessages(self):
-        data = requests.get('http://127.0.0.1:8000/api/messages')
-        for i in data.json()['data']:
-            self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
-
+        try:
+            data = requests.get('http://127.0.0.1:8000/api/messages')
+            for i in data.json()['data']:
+                if i['room'] == f'self.hideRoom.text()':
+                    self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
+        except:
+            print('API not Accessible')
+        
     # HANDLES SENDING ROOM DETAILS OF ROOMS TO BE CREATED TO THE API
     def createRoom(self):
-        if self.room_name != '' and self.room_pass != '':
-            requests.post('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
-        self.room_name.clear()
-        self.room_pass.clear()
+        try:
+            if self.room_name != '' and self.room_pass != '':
+                requests.post('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
+            self.room_name.clear()
+            self.room_pass.clear()
+        except:
+            print('API Not Accessible')
 
     def roomAuth(self):
-        if self.room_name_auth != '' and self.room_pass_auth != '':
-            room = requests.get('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name_auth.text(), 'room_pass': self.room_pass_auth.text()})
-            if room:
-                self.room_name_auth.clear()
-                self.room_pass_auth.clear()
-                self.display.setCurrentWidget(self.chat_room)
-                self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
+        try:
+            if self.room_name_auth != '' and self.room_pass_auth != '':
+                room = requests.get('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name_auth.text(), 'room_pass': self.room_pass_auth.text()})
+                if room:
+                    self.display.setCurrentWidget(self.chat_room)
+                    self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
+            self.room_name_auth.clear()
+            self.room_pass_auth.clear()
+            self.hideRoom.setText(f'{self.room_name_auth.text()}')
+        except:
+            print('API Not Accessible')
 
     def returnToLogin(self):
         self.display.setCurrentWidget(self.auth)
