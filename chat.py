@@ -58,8 +58,8 @@ class ChatApp(QMainWindow):
                     color: #333333;
                 }
                 #send:hover{
-                    background-color: #333;
-                    color: #fff;
+                    background-color: #7dbbfd;
+                    color: #333;
                 }
                 #messagebody{
                     height: 30px;
@@ -150,8 +150,7 @@ class ChatApp(QMainWindow):
 
         # THE FIELD HOLDING ROOM NAME IN CHAT (HIDDEN)
         self.hideRoom = QLineEdit(self)
-        #self.hideRoom.setText('Lelolelo')
-        #self.hideRoom.hide()
+        self.hideRoom.hide()
 
         ##### BUTTON TO SEND THE TYPED MESSAGE
         self.send = QPushButton(self)
@@ -331,30 +330,35 @@ class ChatApp(QMainWindow):
         ##### SENDING MESSAGE TO API AND RE-APPENDING UPDATED DATA
         try:
             if self.messageBody.text() != '':
-                #requests.post('http://127.0.0.1:8000/api/messages', data={'author': 'Praise', 'body': self.messageBody.text(), 'room': self.hideRoom.text()})
-                #data = requests.get('http://127.0.0.1:8000/api/messages')
-                # for i in data.json()['data']:
-                #     if i['room'] == self.hideRoom.text():
-                #         j = i[-1]
-                #         print(j)
-                #self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
-                print(self.roomTitle.text())
-            else:
-                print(self.roomTitle.text().split(' ')[1])
+                requests.post('http://127.0.0.1:8000/api/messages', data={'author': 'Praise', 'body': self.messageBody.text(), 'room': self.hideRoom.text()})
+                data = requests.get('http://127.0.0.1:8000/api/messages')
+                mess = []
+                for i in data.json()['data']:
+                    #print(i['room'])
+                    if i['room'] == self.hideRoom.text():
+                        #print(i{0})
+                        mess.append(i)
+                print(mess[-1]['body'])
+                self.messageDisplay.append(f'{mess[-1]['author']}:   {mess[-1]['body']}\n')
+                    
+                        
+
+                    # if i['room'] == self.hideRoom.text():
+                    #     print('This is it:\n'+i)
+                    #     self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
             self.messageBody.clear()
-        except:
-            print('API Not Accessible')
-        print(f'{self.hideRoom.text()}')
+        except ConnectionRefusedError as e:
+            print(e)
 
     # THE FUNCTION THAT GETS STORED MESSAGES FROM THE API
     def gettingMessages(self):
         try:
             data = requests.get('http://127.0.0.1:8000/api/messages')
             for i in data.json()['data']:
-                if i['room'] == f'self.hideRoom.text()':
+                if i['room'] == f'{self.hideRoom.text()}':
                     self.messageDisplay.append(f'{i['author']}:   {i['body']}\n')
-        except:
-            print('API not Accessible')
+        except ConnectionRefusedError as e:
+            print(e)
         
     # HANDLES SENDING ROOM DETAILS OF ROOMS TO BE CREATED TO THE API
     def createRoom(self):
@@ -363,8 +367,8 @@ class ChatApp(QMainWindow):
                 requests.post('http://127.0.0.1:8000/api/rooms', data={'room_name': self.room_name.text(), 'room_pass': self.room_pass.text()})
             self.room_name.clear()
             self.room_pass.clear()
-        except:
-            print('API Not Accessible')
+        except ConnectionRefusedError as e:
+            print(e)
 
     def roomAuth(self):
         try:
@@ -373,11 +377,13 @@ class ChatApp(QMainWindow):
                 if room:
                     self.display.setCurrentWidget(self.chat_room)
                     self.roomTitle.setText(f'Welcome to {self.room_name_auth.text()} Chat Room,')
+            self.hideRoom.setText(f'{self.room_name_auth.text()}')
             self.room_name_auth.clear()
             self.room_pass_auth.clear()
-            self.hideRoom.setText(f'{self.room_name_auth.text()}')
-        except:
-            print('API Not Accessible')
+            
+            self.gettingMessages()
+        except ConnectionRefusedError as e:
+            print(e)
 
     def returnToLogin(self):
         self.display.setCurrentWidget(self.auth)
