@@ -1,6 +1,12 @@
 **ChatApp**
 
-This application is for chatting. Rooms can be created with passcodes to improve chat security
+This is a solo project aimed at ehancing chat experience and security
+
+**Key Features:** <br/>
+1. Creating Chatrooms <br/>
+2. Logging into chatrooms <br/>
+3. Accessing chat room messages <br/>
+4. Provision of passcode to ensure chat room security <br/>
 
 `import sys`<br/>
 `import requests`<br/>
