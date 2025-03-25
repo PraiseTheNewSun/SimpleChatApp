@@ -18,4 +18,4 @@ The code above imports the necessary classes for the application
 
 `class ChatApp(QMainWindow):`
 
-The code above creates a class instance that inherits from `QMainWindow` class. It just creates a window for our app
+The code above creates a class instance that inherits from `QMainWindow` class. It just creates a window for our app and initializes the user interface
