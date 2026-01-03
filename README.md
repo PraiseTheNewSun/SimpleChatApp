@@ -1,4 +1,4 @@
-**ChatApp**
+# Chatteau
 
 This is a solo project aimed at ehancing chat experience and security
 
@@ -8,14 +8,10 @@ This is a solo project aimed at ehancing chat experience and security
 3. Accessing chat room messages <br/>
 4. Provision of passcode to ensure chat room security <br/>
 
-`import sys`<br/>
-`import requests`<br/>
-`from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel, QWidget, QVBoxLayout, QHBoxLayout, QStackedWidget, QPushButton, QLineEdit, QTextEdit, QListWidget`<br/>
-`from PyQt5.QtCore import QRect, QSize`<br/>
-`from PyQt5.QtGui import QPixmap`<br/>
+## How it looks
+<img width="1366" height="768" alt="Screenshot from 2025-03-10 00-40-43" src="https://github.com/user-attachments/assets/4ce5281b-2947-4054-ab13-a46d3ddf7a6a" />
+<img width="1366" height="768" alt="Screenshot from 2025-03-04 13-00-53" src="https://github.com/user-attachments/assets/9ff837f0-99da-4178-9cdb-5cb2de624ed5" />
+<img width="1366" height="768" alt="Screenshot from 2025-03-10 00-40-33" src="https://github.com/user-attachments/assets/014a01d6-eeb7-4947-bc7d-7511af53f5ac" />
 
-The code above imports the necessary classes for the application
-
-`class ChatApp(QMainWindow):`
-
-The code above creates a class instance that inherits from `QMainWindow` class. It just creates a window for our app and initializes the user interface
+## How it works
+![upwork-2026-01-03_20 37-ezgif com-video-to-gif-converter (1)](https://github.com/user-attachments/assets/4545eb28-eaba-4abe-8a2c-0621be79678a)
